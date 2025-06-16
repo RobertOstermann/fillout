@@ -1,0 +1,16 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    /* Client */
+    {
+      "label": "client - npm start",
+      "type": "npm",
+      "script": "dev",
+      "problemMatcher": [ ],
+      "presentation": {
+        "panel": "dedicated",
+        "close": false
+      }
+    },
+  ],
+}

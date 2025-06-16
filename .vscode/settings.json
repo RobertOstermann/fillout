@@ -1,0 +1,121 @@
+{
+  /* Editor */
+  "editor.formatOnSave": true,
+  /* Files */
+  "files.associations": {
+    ".prettierrc": "jsonc",
+    "*.env": "properties"
+  },
+  "files.trimFinalNewlines": true,
+  /* Search */
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "**/Migrations": true,
+    "**/routeTree.gen.ts": true
+  },
+  /* Other */
+  "json.format.keepLines": true,
+  /* Extensions */
+  // Git
+  "git.branchPrefix": "feature/",
+  "git.inputValidationSubjectLength": 500,
+  // ESLint
+  // Path AutoComplete
+  "path-autocomplete.extensionOnImport": true,
+  "path-autocomplete.pathMappings": {
+    "components": "${workspace}/client/src/components",
+    "styles": "${workspace}/client/src/styles",
+    "/images": "${workspace}/client/public/images"
+  },
+  // We only need scss suggestions
+  "path-autocomplete.excludedItems": {
+    // Ignore typescript/javascript suggestions
+    "**/*{.ts,.tsx,.js,.jsx}": {
+      "when": "**"
+    },
+    // Ignore folder suggestions
+    "**": {
+      "when": "**",
+      "context": "import.*",
+      "isDir": true
+    }
+  },
+  // Tailwind CSS
+  "tailwindCSS.experimental.classRegex": [
+    // https://github.com/paolotiu/tailwind-intellisense-regex-list?tab=readme-ov-file#tailwind-variants
+    [ "tv\\(([^)]*)\\)", "{?\\s?[\\w].*:\\s*?[\"'`]([^\"'`]*).*?,?\\s?}?" ],
+    // https://github.com/tailwindlabs/tailwindcss-intellisense/issues/1032#issuecomment-2575812786
+    [ "(?<=cva\\([\\s\\S]*?)[\"']([^\"']+)[\"']" ],
+    // https://github.com/paolotiu/tailwind-intellisense-regex-list?tab=readme-ov-file#string-endings-most-useful
+    [ "\\b\\w*ClassName\\b\\s*=\\s*[\"'`]([^\"'`]*)[\"'`]" ],
+    [ "\\b\\w*ClassNames\\b\\s*=\\s*[\"'`]([^\"'`]*)[\"'`]" ],
+    [ "className\\s*:\\s*[\"'`]([^\"'`]*)[\"'`]" ]
+  ],
+  // TODO Tree
+  "todo-tree.tree.scanMode": "workspace",
+  /* File Types */
+  // Dotnet
+  "[csharp]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    },
+    "editor.defaultFormatter": "csharpier.csharpier-vscode"
+  },
+  // Javascript
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "[javascript]": {
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Javascript React
+  "[javascriptreact]": {
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Typescript
+  "vsintellicode.typescript.completionsEnabled": true,
+  "typescript.format.semicolons": "insert",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  "typescript.preferences.quoteStyle": "double",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "[typescript]": {
+    "editor.tabSize": 2,
+    "editor.codeActionsOnSave": [
+      // "source.addMissingImports.ts",
+      // "source.removeUnused.ts",
+      "source.fixAll.eslint"
+    ],
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.tabSize": 2,
+    "editor.codeActionsOnSave": [
+      // "source.addMissingImports.ts",
+      // "source.removeUnused.ts",
+      "source.fixAll.eslint"
+    ],
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // CSS
+  "css.completion.completePropertyWithSemicolon": true,
+  // LESS
+  "less.completion.completePropertyWithSemicolon": true,
+  // SCSS
+  "scss.completion.completePropertyWithSemicolon": true,
+  "[scss]": {
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // JSON
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
+}
