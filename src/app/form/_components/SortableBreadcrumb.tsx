@@ -24,7 +24,7 @@ type SortableBreadcrumbProps = {
 };
 
 export function SortableBreadcrumb(props: SortableBreadcrumbProps) {
-  const { form, isActive, isDragging, isDropdownOpen, openDropdownMenu } = props;
+  const { form, isActive, isDropdownOpen, openDropdownMenu } = props;
 
   const router = useRouter();
   const { listeners, setNodeRef, transform, transition } = useSortable({
@@ -67,6 +67,12 @@ export function SortableBreadcrumb(props: SortableBreadcrumbProps) {
               } else {
                 router.push(`/form?id=${form.id}`);
               }
+            }
+          }}
+          onContextMenu={(e) => {
+            if (isActive) {
+              e.preventDefault();
+              openDropdownMenu?.();
             }
           }}
         >
