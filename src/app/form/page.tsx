@@ -96,7 +96,7 @@ function Form() {
   }, [id]);
 
   const generateUniqueId = (pageName: string) => {
-    const baseId = pageName
+    const baseId = (pageName.trim() ? pageName.trim() : "page")
       .toLowerCase()
       .replace(/\s+/g, "-")
       .replace(/[^a-z0-9-]/g, "");
