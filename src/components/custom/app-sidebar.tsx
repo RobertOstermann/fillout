@@ -1,5 +1,13 @@
 import type { LucideIcon } from "lucide-react";
-import { Calendar, Home, Paperclip, Trophy, Users } from "lucide-react";
+import {
+  Activity,
+  Calendar,
+  CircleEllipsis,
+  EllipsisVertical,
+  FileStack,
+  Image,
+  Mail,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -27,24 +35,41 @@ const items: Section[] = [
     label: "Frequently Used",
     items: [
       {
-        title: "Home",
-        icon: Home,
+        title: "Switch",
+        icon: Activity,
       },
       {
-        title: "Players",
-        icon: Users,
+        title: "Multiple Choice",
+        icon: CircleEllipsis,
       },
       {
-        title: "Entries",
+        title: "Email Input",
+        icon: Mail,
+      },
+      {
+        title: "Picture Choice",
+        icon: Image,
+      },
+    ],
+  },
+  {
+    label: "Choices",
+    items: [
+      {
+        title: "Dropdown",
+        icon: EllipsisVertical,
+      },
+      {
+        title: "Picture Choice",
+        icon: Image,
+      },
+      {
+        title: "Multiselect",
+        icon: FileStack,
+      },
+      {
+        title: "Date",
         icon: Calendar,
-      },
-      {
-        title: "Leaders",
-        icon: Trophy,
-      },
-      {
-        title: "Documents",
-        icon: Paperclip,
       },
     ],
   },
@@ -60,7 +85,7 @@ export function AppSidebar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <p className="text-center font-semibold">Welcome!</p>
+            <p className="text-center font-semibold">Form Inputs</p>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -69,16 +94,24 @@ export function AppSidebar() {
           return (
             <SidebarGroup key={section.label}>
               <SidebarGroupLabel>{section.label}</SidebarGroupLabel>
-              <SidebarMenu>
+              <div className="flex flex-row flex-wrap justify-around gap-2">
                 {section.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton tooltip={item.title}>
-                      <item.icon />
-                      <span>{item.title}</span>
+                  <div key={`${section.label}-${item.title}`} className="flex">
+                    <SidebarMenuButton
+                      size="lg"
+                      className="border-fillout-primary h-22 w-26 flex-col items-center justify-between border-1 text-center text-sm text-wrap transition-all duration-200 active:scale-95"
+                      tooltip={item.title}
+                    >
+                      <div className="bg-fillout-primary/25 flex w-full justify-center rounded-md p-1">
+                        <item.icon width={18} />
+                      </div>
+                      <div className="flex h-20 w-full items-center justify-center overflow-hidden">
+                        <p className="text-center">{item.title}</p>
+                      </div>
                     </SidebarMenuButton>
-                  </SidebarMenuItem>
+                  </div>
                 ))}
-              </SidebarMenu>
+              </div>
             </SidebarGroup>
           );
         })}

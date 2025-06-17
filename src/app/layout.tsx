@@ -31,7 +31,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
         <div
           id="layout"
-          className="from-background-primary/75 to-background flex h-full flex-col bg-linear-to-b"
+          className="from-fillout-primary/75 to-background flex h-full flex-col bg-linear-to-b"
         >
           <AppHeader />
           {children}

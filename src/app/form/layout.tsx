@@ -15,9 +15,7 @@ export default function FormLayout({
           <div className="pl-6">
             <AppSidebar />
           </div>
-          <div className="flex flex-1 flex-col overflow-auto p-4 pb-0 [view-transition-name:main-content]">
-            {children}
-          </div>
+          <div className="flex flex-1 flex-col overflow-auto p-4 pb-0">{children}</div>
         </div>
       </SidebarProvider>
     </div>
