@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import {
   CircleCheck,
   Clipboard,
@@ -67,7 +67,15 @@ const defaultForms: Form[] = [
   },
 ];
 
-export default function Form() {
+export default function Page() {
+  return (
+    <Suspense>
+      <Form />
+    </Suspense>
+  );
+}
+
+function Form() {
   const router = useRouter();
   const search = useSearchParams();
   const id = search.get("id");
