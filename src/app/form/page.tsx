@@ -14,7 +14,7 @@ import {
 import type { IconName } from "lucide-react/dynamic";
 import { DynamicIcon } from "lucide-react/dynamic";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import {
   Breadcrumb,
@@ -24,15 +24,24 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 type Form = {
   id: string;
@@ -59,14 +68,22 @@ const defaultForms: Form[] = [
 ];
 
 export default function Form() {
+  const router = useRouter();
   const search = useSearchParams();
   const id = search.get("id");
 
   const [forms, setForms] = useState<Form[]>(defaultForms);
   const [selectedForm, setSelectedForm] = useState(defaultForms.find((x) => x.id === id));
 
+  const [renameDialogOpen, setRenameDialogOpen] = useState(false);
+  const [renameDialogName, setRenameDialogName] = useState("");
+
   useEffect(() => {
-    setSelectedForm(defaultForms.find((x) => x.id === id));
+    setRenameDialogName(selectedForm?.label ?? "");
+  }, [selectedForm]);
+
+  useEffect(() => {
+    setSelectedForm(forms.find((x) => x.id === id));
   }, [id]);
 
   return (
@@ -92,9 +109,8 @@ export default function Form() {
             <div className="absolute inset-0 flex items-center">
               <div className="border-muted-foreground/30 w-[calc(100%-1rem)] border-t-2 border-dotted"></div>
             </div>
-            {forms.map((form, index) => {
+            {forms.map((form) => {
               const isActive = form.id === selectedForm?.id;
-              const lastItem = forms.length - 1 === index;
 
               if (isActive) {
                 return (
@@ -131,28 +147,72 @@ export default function Form() {
                         >
                           <Flag fill="blue" /> Set as first page
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setRenameDialogOpen(true)}>
                           <Pencil /> Rename
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                           <Clipboard /> Copy
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            const currentIndex = forms.findIndex((f) => f.id === form.id);
+                            const baseName = form.label;
+
+                            let duplicateNumber = 1;
+                            while (
+                              forms.some((f) => f.label === `${baseName} (${duplicateNumber})`)
+                            ) {
+                              duplicateNumber++;
+                            }
+
+                            const duplicatedForm: Form = {
+                              id: `${form.id}-${duplicateNumber}`,
+                              label: `${baseName} (${duplicateNumber})`,
+                              icon: form.icon,
+                            };
+
+                            setForms((prevForms) => {
+                              const newForms = [...prevForms];
+
+                              let insertIndex = currentIndex + 1;
+                              while (
+                                insertIndex < newForms.length &&
+                                newForms[insertIndex].label.startsWith(`${baseName} (`)
+                              ) {
+                                insertIndex++;
+                              }
+
+                              newForms.splice(insertIndex, 0, duplicatedForm);
+                              return newForms;
+                            });
+                          }}
+                        >
                           <Copy /> Duplicate
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
-                        <DropdownMenuItem className="text-destructive">
+                        <DropdownMenuItem
+                          className="text-destructive"
+                          onClick={() => {
+                            setForms((prevForms) => prevForms.filter((f) => f.id !== form.id));
+                            if (selectedForm?.id === form.id) {
+                              const remainingForms = forms.filter((f) => f.id !== form.id);
+                              if (remainingForms.length > 0) {
+                                router.push(`/form?id=${remainingForms[0].id}`);
+                              } else {
+                                router.push("/form?id=ending");
+                              }
+                            }
+                          }}
+                        >
                           <Trash className="text-destructive" /> Delete
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
                     </DropdownMenuContent>
-                    {!lastItem && (
-                      <BreadcrumbSeparator className="opacity-0 transition-all duration-300 hover:cursor-pointer hover:opacity-100 active:scale-95">
-                        <PlusCircle />
-                      </BreadcrumbSeparator>
-                    )}
+                    <BreadcrumbSeparator className="opacity-0 transition-all duration-300 hover:cursor-pointer hover:opacity-100 active:scale-95">
+                      <PlusCircle />
+                    </BreadcrumbSeparator>
                   </DropdownMenu>
                 );
               }
@@ -174,11 +234,9 @@ export default function Form() {
                       </Link>
                     </Button>
                   </BreadcrumbItem>
-                  {!lastItem && (
-                    <BreadcrumbSeparator className="opacity-0 transition-all duration-300 hover:cursor-pointer hover:opacity-100 active:scale-95">
-                      <PlusCircle />
-                    </BreadcrumbSeparator>
-                  )}
+                  <BreadcrumbSeparator className="opacity-0 transition-all duration-300 hover:cursor-pointer hover:opacity-100 active:scale-95">
+                    <PlusCircle />
+                  </BreadcrumbSeparator>
                 </React.Fragment>
               );
             })}
@@ -203,6 +261,48 @@ export default function Form() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
+      <Dialog open={renameDialogOpen} onOpenChange={setRenameDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Rename Page</DialogTitle>
+          </DialogHeader>
+          <div>
+            <Label htmlFor="page-name">Page Name</Label>
+            <Input
+              id="page-name"
+              name="page name"
+              value={renameDialogName}
+              onChange={(e) => setRenameDialogName(e.target.value)}
+            />
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="destructive" onClick={() => setRenameDialogOpen(false)}>
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              onClick={() => {
+                if (selectedForm && renameDialogName.trim()) {
+                  setForms((prevForms) =>
+                    prevForms.map((form) =>
+                      form.id === selectedForm.id
+                        ? { ...form, label: renameDialogName.trim() }
+                        : form,
+                    ),
+                  );
+                  setSelectedForm((prev) =>
+                    prev ? { ...prev, label: renameDialogName.trim() } : prev,
+                  );
+                }
+                setRenameDialogOpen(false);
+              }}
+            >
+              Save changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

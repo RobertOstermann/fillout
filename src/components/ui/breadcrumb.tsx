@@ -24,7 +24,7 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
 
 function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   return (
-    <motion.div layout className="z-10">
+    <motion.div layout transition={{ duration: 0.3 }} className="z-10">
       <li
         data-slot="breadcrumb-item"
         className={cn("z-10 inline-flex items-center gap-1.5", className)}
