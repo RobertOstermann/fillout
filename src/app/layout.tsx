@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import { Header } from "@/components/header";
+import { AppHeader } from "@/components/custom/app-header";
 
 import "./globals.css";
 
@@ -33,7 +33,7 @@ export default function RootLayout({
           id="layout"
           className="from-background-primary/75 to-background flex h-full flex-col bg-linear-to-b"
         >
-          <Header />
+          <AppHeader />
           {children}
         </div>
       </body>

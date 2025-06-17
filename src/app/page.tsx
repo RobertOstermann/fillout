@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
+    <div className="flex flex-1 flex-col items-center gap-6 pt-24 text-center">
       <h1 className="from-primary via-primary to-background-primary/85 bg-gradient-to-b via-85% bg-clip-text text-7xl font-bold text-transparent md:text-9xl">
         Forms that
         <br />

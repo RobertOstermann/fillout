@@ -1,10 +1,7 @@
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Form",
-  description: "Robert Ostermann: Fillout Frontend Take-home",
-  authors: { name: "Robert Ostermann", url: "https://github.com/RobertOstermann" },
-};
+import { AppSidebar } from "@/components/custom/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function FormLayout({
   children,
@@ -12,8 +9,17 @@ export default function FormLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div id="form-layout" className="flex h-full flex-col bg-linear-to-b">
-      {children}
+    <div id="form-layout" className="flex flex-col bg-linear-to-b">
+      <SidebarProvider className="flex flex-col">
+        <div className="flex flex-1 overflow-auto">
+          <div className="pl-6">
+            <AppSidebar />
+          </div>
+          <div className="flex flex-1 flex-col overflow-auto p-4 pb-0 [view-transition-name:main-content]">
+            {children}
+          </div>
+        </div>
+      </SidebarProvider>
     </div>
   );
 }
