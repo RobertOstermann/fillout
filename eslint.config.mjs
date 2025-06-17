@@ -124,7 +124,12 @@ export default tseslint.config(
   },
   // Rules for components
   {
-    files: ["**/components/**/*.ts", "**/components/**/*.tsx"],
+    files: [
+      "**/components/**/*.ts",
+      "**/components/**/*.tsx",
+      "**/_components/**/*.ts",
+      "**/_components/**/*.tsx",
+    ],
     languageOptions: {
       sourceType: "module",
     },
