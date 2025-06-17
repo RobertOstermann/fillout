@@ -26,7 +26,7 @@ export function SortableBreadcrumb(props: SortableBreadcrumbProps) {
   const { form, isActive, isDragging, isDropdownOpen, openDropdownMenu } = props;
 
   const router = useRouter();
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+  const { listeners, setNodeRef, transform, transition } = useSortable({
     id: form.id,
   });
 
@@ -39,15 +39,15 @@ export function SortableBreadcrumb(props: SortableBreadcrumbProps) {
     <motion.div
       key={form.id}
       ref={setNodeRef}
+      // This causes issues immediately after a breadcrumb is 'set as first page'
       layout={isDragging ? false : "position"}
       transition={{ duration: 0.3 }}
       className="z-10"
       style={style}
-      {...attributes}
       {...listeners}
     >
       <BreadcrumbItem>
-        {isActive && <DropdownMenuTrigger className="absolute z-0 p-6" />}
+        {isActive && <DropdownMenuTrigger className="absolute z-0 p-6" tabIndex={-1} />}
         <Button
           variant={isActive ? "outline" : "breadcrumb"}
           className="group z-10"
@@ -56,6 +56,16 @@ export function SortableBreadcrumb(props: SortableBreadcrumbProps) {
               openDropdownMenu?.();
             } else {
               router.push(`/form?id=${form.id}`);
+            }
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              if (isActive) {
+                openDropdownMenu?.();
+              } else {
+                router.push(`/form?id=${form.id}`);
+              }
             }
           }}
         >
