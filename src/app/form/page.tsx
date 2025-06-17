@@ -1,6 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { CircleCheck, EllipsisVertical, Plus, PlusCircle } from "lucide-react";
+import {
+  CircleCheck,
+  Clipboard,
+  Copy,
+  EllipsisVertical,
+  Flag,
+  Pencil,
+  Plus,
+  PlusCircle,
+  Trash,
+} from "lucide-react";
 import type { IconName } from "lucide-react/dynamic";
 import { DynamicIcon } from "lucide-react/dynamic";
 import Link from "next/link";
@@ -13,6 +23,16 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type Form = {
   id: string;
@@ -65,11 +85,12 @@ export default function Form() {
           </p>
         </div>
       </div>
-      <div className="bg-background border-sidebar-border flex h-(--header-height) w-full items-center justify-center rounded-md border-2">
+      <div className="bg-background border-sidebar-border flex h-(--header-height) w-full items-center overflow-auto rounded-md border-2 px-4">
         <Breadcrumb>
           <BreadcrumbList className="relative">
+            {/* Background dotted line */}
             <div className="absolute inset-0 flex items-center">
-              <div className="border-muted-foreground/30 w-full border-t-2 border-dotted"></div>
+              <div className="border-muted-foreground/30 w-[calc(100%-1rem)] border-t-2 border-dotted"></div>
             </div>
             {forms.map((form, index) => {
               const isActive = form.id === selectedForm?.id;
@@ -77,27 +98,62 @@ export default function Form() {
 
               if (isActive) {
                 return (
-                  <React.Fragment key={form.id}>
+                  <DropdownMenu key={form.id}>
                     <BreadcrumbItem>
-                      <Button variant={isActive ? "outline" : "breadcrumb"} className="group">
-                        <div className="w-4">
-                          <DynamicIcon
-                            name={form.icon}
-                            className={
-                              isActive ? "text-breadcrumb-active-foreground size-4.5" : "size-4.5"
-                            }
-                          />
-                        </div>
-                        {form.label}
-                        <EllipsisVertical className="size-4 max-w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:max-w-4 group-hover:opacity-100 group-focus:max-w-4 group-focus:opacity-100" />
-                      </Button>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant={isActive ? "outline" : "breadcrumb"} className="group">
+                          <div className="w-4">
+                            <DynamicIcon
+                              name={form.icon}
+                              className={
+                                isActive ? "text-breadcrumb-active-foreground size-4.5" : "size-4.5"
+                              }
+                            />
+                          </div>
+                          {form.label}
+                          <EllipsisVertical className="size-4 max-w-0 overflow-hidden opacity-0 transition-all delay-150 duration-300 group-hover:max-w-4 group-hover:opacity-100 group-focus:max-w-4 group-focus:opacity-100 group-data-[state=open]:max-w-4 group-data-[state=open]:opacity-100" />
+                        </Button>
+                      </DropdownMenuTrigger>
                     </BreadcrumbItem>
+                    <DropdownMenuContent className="w-56" align="start">
+                      <DropdownMenuLabel>Settings</DropdownMenuLabel>
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            setForms((prevForms) => {
+                              const formToMove = prevForms.find((x) => x.id === form.id);
+                              if (!formToMove) return prevForms;
+
+                              const remainingForms = prevForms.filter((x) => x.id !== form.id);
+                              return [formToMove, ...remainingForms];
+                            });
+                          }}
+                        >
+                          <Flag fill="blue" /> Set as first page
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Pencil /> Rename
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Clipboard /> Copy
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Copy /> Duplicate
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem className="text-destructive">
+                          <Trash className="text-destructive" /> Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
                     {!lastItem && (
                       <BreadcrumbSeparator className="opacity-0 transition-all duration-300 hover:cursor-pointer hover:opacity-100 active:scale-95">
                         <PlusCircle />
                       </BreadcrumbSeparator>
                     )}
-                  </React.Fragment>
+                  </DropdownMenu>
                 );
               }
 
@@ -138,7 +194,7 @@ export default function Form() {
                 </Link>
               </Button>
             </BreadcrumbItem>
-            <BreadcrumbItem>
+            <BreadcrumbItem className="pr-4">
               <Button variant="outline">
                 <Plus strokeWidth={3} className="size-4.5" />
                 Add Page

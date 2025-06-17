@@ -1,6 +1,7 @@
 import type * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { ChevronRight, MoreHorizontal } from "lucide-react";
+import { motion } from "motion/react";
 
 import { cn } from "@/components/lib/utils";
 
@@ -13,7 +14,7 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
     <ol
       data-slot="breadcrumb-list"
       className={cn(
-        "text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words sm:gap-2.5",
+        "text-muted-foreground flex items-center gap-1.5 text-sm break-words sm:gap-2.5",
         className,
       )}
       {...props}
@@ -23,11 +24,13 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
 
 function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   return (
-    <li
-      data-slot="breadcrumb-item"
-      className={cn("z-10 inline-flex items-center gap-1.5", className)}
-      {...props}
-    />
+    <motion.div layout className="z-10">
+      <li
+        data-slot="breadcrumb-item"
+        className={cn("z-10 inline-flex items-center gap-1.5", className)}
+        {...props}
+      />
+    </motion.div>
   );
 }
 
