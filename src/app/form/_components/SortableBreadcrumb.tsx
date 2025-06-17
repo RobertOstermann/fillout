@@ -40,8 +40,8 @@ export function SortableBreadcrumb(props: SortableBreadcrumbProps) {
     <motion.div
       key={form.id}
       ref={setNodeRef}
-      // This causes issues immediately after a breadcrumb is 'set as first page'
-      layout={isDragging ? false : "position"}
+      // This has some bugs when using dropdown menu items, so leaving disabled
+      // layout={isDragging ? false : "position"}
       transition={{ duration: 0.3 }}
       className="z-10"
       style={style}
