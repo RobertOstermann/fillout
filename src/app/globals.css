@@ -7,6 +7,10 @@
   --header-height: 4.5rem;
   --color-app-header: var(--app-header);
   --color-fillout-primary: var(--fillout-primary);
+  --color-breadcrumb-background: var(--breadcrumb-background);
+  --color-breadcrumb-hover: var(--breadcrumb-hover);
+  --color-breadcrumb-active: var(--breadcrumb-active);
+  --color-breadcrumb-active-foreground: var(--breadcrumb-active-foreground);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -51,6 +55,10 @@
   /* Custom */
   --app-header: oklch(1 0 0);
   --fillout-primary: oklch(0.86 0.16 86.2);
+  --breadcrumb-background: oklch(0.95 0 0);
+  --breadcrumb-hover: oklch(0.85 0 0);
+  --breadcrumb-active: oklch(1 0 0);
+  --breadcrumb-active-foreground: oklch(0.83 0.2 80);
 
   /* Shadcn */
   --radius: 0.625rem;

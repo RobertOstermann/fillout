@@ -12,10 +12,10 @@ export default function FormLayout({
     <div id="form-layout" className="flex flex-col bg-linear-to-b">
       <SidebarProvider className="flex flex-col">
         <div className="flex flex-1 overflow-auto">
-          <div className="pl-6">
+          <div className="sm:pl-6">
             <AppSidebar />
           </div>
-          <div className="flex flex-1 flex-col overflow-auto p-4 pb-0">{children}</div>
+          <div className="flex flex-1 flex-col overflow-auto p-4 pb-0 sm:pr-8">{children}</div>
         </div>
       </SidebarProvider>
     </div>

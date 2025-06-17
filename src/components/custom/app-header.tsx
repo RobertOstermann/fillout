@@ -6,8 +6,8 @@ import { FilloutIcon } from "@/images/fillout";
 export function AppHeader() {
   return (
     <>
-      <header className="fixed z-50 flex h-(--header-height) w-full items-center px-8 pt-4">
-        <div className="bg-app-header text-primary flex h-full w-full items-center justify-between gap-2 rounded-xl px-4 shadow-xl">
+      <header className="fixed z-50 flex h-(--header-height) w-full items-center px-4 pt-4 sm:px-8">
+        <div className="bg-app-header text-primary flex h-full w-full items-center justify-between gap-2 rounded-xl px-4 shadow">
           <Link href="/">
             <FilloutIcon className="text-primary ml-3 scale-125 sm:ml-8" />
           </Link>

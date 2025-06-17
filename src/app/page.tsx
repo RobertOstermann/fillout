@@ -14,7 +14,7 @@ export default function Home() {
         Well not really since this is just an interview project
       </p>
       <Button size="lg" className="text-fillout-primary py-6 text-2xl" asChild>
-        <Link href="/form">Get Started - it's free</Link>
+        <Link href="/form">View the project</Link>
       </Button>
     </div>
   );
