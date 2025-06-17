@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { CircleCheck, Plus, PlusCircle } from "lucide-react";
+import { CircleCheck, EllipsisVertical, Plus, PlusCircle } from "lucide-react";
 import type { IconName } from "lucide-react/dynamic";
 import { DynamicIcon } from "lucide-react/dynamic";
 import Link from "next/link";
@@ -74,6 +74,32 @@ export default function Form() {
             {forms.map((form, index) => {
               const isActive = form.id === selectedForm?.id;
               const lastItem = forms.length - 1 === index;
+
+              if (isActive) {
+                return (
+                  <React.Fragment key={form.id}>
+                    <BreadcrumbItem>
+                      <Button variant={isActive ? "outline" : "breadcrumb"} className="group">
+                        <div className="w-4">
+                          <DynamicIcon
+                            name={form.icon}
+                            className={
+                              isActive ? "text-breadcrumb-active-foreground size-4.5" : "size-4.5"
+                            }
+                          />
+                        </div>
+                        {form.label}
+                        <EllipsisVertical className="size-4 max-w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:max-w-4 group-hover:opacity-100 group-focus:max-w-4 group-focus:opacity-100" />
+                      </Button>
+                    </BreadcrumbItem>
+                    {!lastItem && (
+                      <BreadcrumbSeparator className="opacity-0 transition-all duration-300 hover:cursor-pointer hover:opacity-100 active:scale-95">
+                        <PlusCircle />
+                      </BreadcrumbSeparator>
+                    )}
+                  </React.Fragment>
+                );
+              }
 
               return (
                 <React.Fragment key={form.id}>
