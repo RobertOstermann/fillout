@@ -75,16 +75,38 @@ export default function Form() {
   const [forms, setForms] = useState<Form[]>(defaultForms);
   const [selectedForm, setSelectedForm] = useState(defaultForms.find((x) => x.id === id));
 
-  const [renameDialogOpen, setRenameDialogOpen] = useState(false);
-  const [renameDialogName, setRenameDialogName] = useState("");
+  const [dialogOpen, setDialogOpen] = useState<false | "rename" | "new">(false);
+  const [pageIndex, setPageIndex] = useState<number>();
+  const [pageName, setPageName] = useState("");
 
   useEffect(() => {
-    setRenameDialogName(selectedForm?.label ?? "");
+    setPageName(selectedForm?.label ?? "");
   }, [selectedForm]);
 
   useEffect(() => {
     setSelectedForm(forms.find((x) => x.id === id));
   }, [id]);
+
+  const generateUniqueId = (pageName: string) => {
+    const baseId = pageName
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "");
+
+    if (!forms.some((form) => form.id === baseId)) {
+      return baseId;
+    }
+
+    let counter = 1;
+    let uniqueId = `${baseId}-${counter}`;
+
+    while (forms.some((form) => form.id === uniqueId)) {
+      counter++;
+      uniqueId = `${baseId}-${counter}`;
+    }
+
+    return uniqueId;
+  };
 
   return (
     <div className="flex flex-1 flex-col gap-4 pb-2">
@@ -109,7 +131,7 @@ export default function Form() {
             <div className="absolute inset-0 flex items-center">
               <div className="border-muted-foreground/30 w-[calc(100%-1rem)] border-t-2 border-dotted"></div>
             </div>
-            {forms.map((form) => {
+            {forms.map((form, index) => {
               const isActive = form.id === selectedForm?.id;
 
               if (isActive) {
@@ -147,7 +169,7 @@ export default function Form() {
                         >
                           <Flag fill="blue" /> Set as first page
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setRenameDialogOpen(true)}>
+                        <DropdownMenuItem onClick={() => setDialogOpen("rename")}>
                           <Pencil /> Rename
                         </DropdownMenuItem>
                         <DropdownMenuItem>
@@ -210,7 +232,14 @@ export default function Form() {
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
                     </DropdownMenuContent>
-                    <BreadcrumbSeparator className="opacity-0 transition-all duration-300 hover:cursor-pointer hover:opacity-100 active:scale-95">
+                    <BreadcrumbSeparator
+                      className="opacity-0 transition-all duration-300 hover:cursor-pointer hover:opacity-100 active:scale-95"
+                      onClick={() => {
+                        setPageIndex(index);
+                        setPageName("");
+                        setDialogOpen("new");
+                      }}
+                    >
                       <PlusCircle />
                     </BreadcrumbSeparator>
                   </DropdownMenu>
@@ -234,7 +263,14 @@ export default function Form() {
                       </Link>
                     </Button>
                   </BreadcrumbItem>
-                  <BreadcrumbSeparator className="opacity-0 transition-all duration-300 hover:cursor-pointer hover:opacity-100 active:scale-95">
+                  <BreadcrumbSeparator
+                    className="opacity-0 transition-all duration-300 hover:cursor-pointer hover:opacity-100 active:scale-95"
+                    onClick={() => {
+                      setPageIndex(index);
+                      setPageName("");
+                      setDialogOpen("new");
+                    }}
+                  >
                     <PlusCircle />
                   </BreadcrumbSeparator>
                 </React.Fragment>
@@ -253,7 +289,14 @@ export default function Form() {
               </Button>
             </BreadcrumbItem>
             <BreadcrumbItem className="pr-4">
-              <Button variant="outline">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setPageIndex(undefined);
+                  setPageName("");
+                  setDialogOpen("new");
+                }}
+              >
                 <Plus strokeWidth={3} className="size-4.5" />
                 Add Page
               </Button>
@@ -261,44 +304,56 @@ export default function Form() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <Dialog open={renameDialogOpen} onOpenChange={setRenameDialogOpen}>
+      <Dialog open={!!dialogOpen} onOpenChange={(open) => setDialogOpen(open ? "new" : false)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Rename Page</DialogTitle>
+            <DialogTitle>{dialogOpen === "new" ? "New" : "Rename"} Page</DialogTitle>
           </DialogHeader>
           <div>
-            <Label htmlFor="page-name">Page Name</Label>
+            <Label htmlFor="page-name">Name</Label>
             <Input
               id="page-name"
               name="page name"
-              value={renameDialogName}
-              onChange={(e) => setRenameDialogName(e.target.value)}
+              value={pageName}
+              onChange={(e) => setPageName(e.target.value)}
             />
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="destructive" onClick={() => setRenameDialogOpen(false)}>
+              <Button variant="destructive" onClick={() => setDialogOpen(false)}>
                 Cancel
               </Button>
             </DialogClose>
             <Button
               onClick={() => {
-                if (selectedForm && renameDialogName.trim()) {
+                if (dialogOpen === "new") {
+                  const newForm: Form = {
+                    id: generateUniqueId(pageName),
+                    label: pageName.trim(),
+                    icon: "file-text",
+                  };
+
+                  setForms((prevForms) => {
+                    const newForms = [...prevForms];
+                    newForms.splice((pageIndex ?? forms.length) + 1, 0, newForm);
+                    return newForms;
+                  });
+
+                  router.push(`/form?id=${newForm.id}`);
+                }
+
+                if (dialogOpen === "rename" && selectedForm && pageName.trim()) {
                   setForms((prevForms) =>
                     prevForms.map((form) =>
-                      form.id === selectedForm.id
-                        ? { ...form, label: renameDialogName.trim() }
-                        : form,
+                      form.id === selectedForm.id ? { ...form, label: pageName.trim() } : form,
                     ),
                   );
-                  setSelectedForm((prev) =>
-                    prev ? { ...prev, label: renameDialogName.trim() } : prev,
-                  );
+                  setSelectedForm((prev) => (prev ? { ...prev, label: pageName.trim() } : prev));
                 }
-                setRenameDialogOpen(false);
+                setDialogOpen(false);
               }}
             >
-              Save changes
+              {dialogOpen === "new" ? "Create" : "Rename"}
             </Button>
           </DialogFooter>
         </DialogContent>
