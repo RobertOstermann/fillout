@@ -1,4 +1,5 @@
 "use client";
+
 import { TriangleAlert } from "lucide-react";
 
 export default function ErrorComponent() {
