@@ -26,7 +26,7 @@ export function SortableBreadcrumb(props: SortableBreadcrumbProps) {
   const { form, isActive, isDragging, isDropdownOpen, openDropdownMenu } = props;
 
   const router = useRouter();
-  const { listeners, setNodeRef, transform, transition } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: form.id,
   });
 
@@ -37,11 +37,13 @@ export function SortableBreadcrumb(props: SortableBreadcrumbProps) {
 
   return (
     <motion.div
+      key={form.id}
       ref={setNodeRef}
       layout={isDragging ? false : "position"}
       transition={{ duration: 0.3 }}
       className="z-10"
       style={style}
+      {...attributes}
       {...listeners}
     >
       <BreadcrumbItem>

@@ -5,6 +5,7 @@ import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors } from
 import { arrayMove, SortableContext, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { CircleCheck, Clipboard, Copy, Flag, Pencil, Plus, PlusCircle, Trash } from "lucide-react";
 import type { IconName } from "lucide-react/dynamic";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -296,33 +297,37 @@ function Form() {
                     </React.Fragment>
                   );
                 })}
-                <BreadcrumbItem>
-                  <Button variant={id === "ending" ? "outline" : "breadcrumb"} asChild>
-                    <Link href="/form?id=ending">
-                      <CircleCheck
-                        className={
-                          id === "ending"
-                            ? "text-breadcrumb-active-foreground size-4.5"
-                            : "size-4.5"
-                        }
-                      />
-                      Ending
-                    </Link>
-                  </Button>
-                </BreadcrumbItem>
-                <BreadcrumbItem className="pr-4">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setPageIndex(undefined);
-                      setPageName("");
-                      setDialogOpen("new");
-                    }}
-                  >
-                    <Plus strokeWidth={3} className="size-4.5" />
-                    Add Page
-                  </Button>
-                </BreadcrumbItem>
+                <motion.div layout transition={{ duration: 0.3 }} className="z-10">
+                  <BreadcrumbItem>
+                    <Button variant={id === "ending" ? "outline" : "breadcrumb"} asChild>
+                      <Link href="/form?id=ending">
+                        <CircleCheck
+                          className={
+                            id === "ending"
+                              ? "text-breadcrumb-active-foreground size-4.5"
+                              : "size-4.5"
+                          }
+                        />
+                        Ending
+                      </Link>
+                    </Button>
+                  </BreadcrumbItem>
+                </motion.div>
+                <motion.div layout transition={{ duration: 0.3 }} className="z-10">
+                  <BreadcrumbItem className="pr-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setPageIndex(undefined);
+                        setPageName("");
+                        setDialogOpen("new");
+                      }}
+                    >
+                      <Plus strokeWidth={3} className="size-4.5" />
+                      Add Page
+                    </Button>
+                  </BreadcrumbItem>
+                </motion.div>
               </BreadcrumbList>
             </SortableContext>
           </Breadcrumb>
