@@ -4,5 +4,8 @@
   "jsxSingleQuote": false,
   "printWidth": 100,
   "tabWidth": 2,
-  "trailingComma": "all"
+  "trailingComma": "all",
+  "plugins": [ "prettier-plugin-tailwindcss" ],
+  "tailwindAttributes": [ "className" ],
+  "tailwindFunctions": [ "cva", "tv" ]
 }
