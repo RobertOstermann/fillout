@@ -18,21 +18,21 @@ import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 type SortableBreadcrumbProps = {
   form: FormPage;
   isActive: boolean;
-  isDragging: boolean;
+  isOverlay?: boolean;
   isDropdownOpen?: boolean;
   openDropdownMenu?: () => void;
 };
 
 export function SortableBreadcrumb(props: SortableBreadcrumbProps) {
-  const { form, isActive, isDropdownOpen, openDropdownMenu } = props;
+  const { form, isActive, isOverlay = false, isDropdownOpen, openDropdownMenu } = props;
 
   const router = useRouter();
-  const { listeners, setNodeRef, transform, transition } = useSortable({
+  const { listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: form.id,
   });
 
   const style: MotionStyle = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition,
   };
 
@@ -43,7 +43,7 @@ export function SortableBreadcrumb(props: SortableBreadcrumbProps) {
       // This has some bugs when using dropdown menu items, so leaving disabled
       // layout={isDragging ? false : "position"}
       transition={{ duration: 0.3 }}
-      className="z-10"
+      className={cn("z-20", isDragging && !isOverlay ? "opacity-0" : "opacity-100")}
       style={style}
       {...listeners}
     >

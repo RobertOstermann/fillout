@@ -1,7 +1,14 @@
 "use client";
 import React, { Suspense, useEffect, useState } from "react";
 import type { DragEndEvent } from "@dnd-kit/core";
-import { DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { CircleCheck, Clipboard, Copy, Flag, Pencil, Plus, PlusCircle, Trash } from "lucide-react";
 import type { IconName } from "lucide-react/dynamic";
@@ -83,7 +90,7 @@ function Form() {
   const [pageIndex, setPageIndex] = useState<number>();
   const [pageName, setPageName] = useState("");
 
-  const [isDragging, setIsDragging] = useState(false);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
     setPageName(selectedForm?.label ?? "");
@@ -121,8 +128,12 @@ function Form() {
     return uniqueId;
   };
 
+  const handleDragStart = (event: any) => {
+    setActiveId(event.active.id as string);
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
-    setIsDragging(false);
+    setActiveId(null);
     const { active, over } = event;
 
     if (active.id !== over?.id) {
@@ -147,7 +158,7 @@ function Form() {
   );
 
   return (
-    <DndContext sensors={sensors} onDragStart={() => setIsDragging(true)} onDragEnd={handleDragEnd}>
+    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <div className="flex flex-1 flex-col gap-4 pb-2">
         <div
           id="form-reveal"
@@ -184,7 +195,6 @@ function Form() {
                         <SortableBreadcrumb
                           form={form}
                           isActive={isActive}
-                          isDragging={isDragging}
                           isDropdownOpen={dropdownMenuOpen}
                           openDropdownMenu={() => setDropdownMenuOpen(true)}
                         />
@@ -283,7 +293,7 @@ function Form() {
 
                   return (
                     <React.Fragment key={form.id}>
-                      <SortableBreadcrumb form={form} isActive={isActive} isDragging={isDragging} />
+                      <SortableBreadcrumb form={form} isActive={isActive} />
                       <BreadcrumbSeparator
                         className="opacity-0 transition-all duration-300 hover:cursor-pointer hover:opacity-100 active:scale-95"
                         onClick={() => {
@@ -387,6 +397,19 @@ function Form() {
           </DialogContent>
         </Dialog>
       </div>
+      <DragOverlay style={{ scale: 0.95 }}>
+        {activeId && forms.find((x) => x.id === activeId) ? (
+          <DropdownMenu key={activeId} open={dropdownMenuOpen} onOpenChange={setDropdownMenuOpen}>
+            <SortableBreadcrumb
+              form={forms.find((x) => x.id === activeId)!}
+              isActive={activeId === selectedForm?.id}
+              isOverlay={true}
+              isDropdownOpen={dropdownMenuOpen}
+              openDropdownMenu={() => setDropdownMenuOpen(true)}
+            />
+          </DropdownMenu>
+        ) : null}
+      </DragOverlay>
     </DndContext>
   );
 }
